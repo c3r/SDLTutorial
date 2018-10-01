@@ -1,15 +1,15 @@
 #ifndef __PADDLE__
 #define __PADDLE__
-
-#include <SDL.h>
+#include "LTexture.h"
 
 class Paddle
 {
 public:
-	static const int HEIGHT = 150;
-	static const int WIDTH = 20;
-	static const int VEL = 5;
+	static const int DOT_WIDTH = 20;
+	static const int DOT_HEIGHT = 20;
+	static const int DOT_VEL = 10;
 
+	Paddle(uint16_t screenW, uint16_t screenH, LTexture* pRednerer);
 	Paddle();
 
 	void handleEvent(SDL_Event& e);
@@ -17,7 +17,9 @@ public:
 	void render();
 
 private:
-	int pos;
-	int vel;
+	int m_posX, m_posY;
+	int m_velX, m_velY;
+	LTexture* m_pTexture;
+	int m_screenWidth, m_screenHeight;
 };
 #endif

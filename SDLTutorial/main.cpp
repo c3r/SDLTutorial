@@ -1,5 +1,4 @@
 #include "main.h"
-#include "Dot.h"
 #include "Paddle.h"
 
 bool init()
@@ -61,7 +60,7 @@ void close()
 }
 
 
-void render(Dot *dot)
+void render(Paddle *dot)
 {
 	SDL_SetRenderDrawColor(gRenderer, 0x10, 0x30, 0x60, 0xFF);
 	SDL_RenderClear(gRenderer);
@@ -75,7 +74,7 @@ std::vector<SDL_Event>& GetFrameEvents()
 	return frame_events;
 }
 
-void handleEvents(Dot *dot)
+void handleEvents(Paddle *dot)
 {
 	SDL_Event _event;
 	while (SDL_PollEvent(&_event) != 0) {
@@ -86,11 +85,11 @@ void handleEvents(Dot *dot)
 		if (event.type == SDL_QUIT)
 			gQuit = true;
 
-		dot->handle_event(event);
+		dot->handleEvent(event);
 	}
 }
 
-void updateState(Dot *dot) 
+void updateState(Paddle *dot) 
 {
 	dot->move();
 }
@@ -104,7 +103,7 @@ int main(int argc, char* args[])
 
 	LTexture *dotTexture = new LTexture(gRenderer);
 	dotTexture->loadFromFile("img/dot.bmp");
-	Dot *dot = new Dot(SCREEN_HEIGHT, SCREEN_WIDTH, dotTexture);
+	Paddle *dot = new Paddle(SCREEN_WIDTH, SCREEN_HEIGHT, dotTexture);
 
 	int32_t ticksPerSecond = 60;
 	int32_t tickInterval = 1000 / ticksPerSecond; // frequency in Hz to period in ms
@@ -113,7 +112,6 @@ int main(int argc, char* args[])
 
 	while (!gQuit) 
 	{
-
 		uint32_t currentTime = SDL_GetTicks();
 		dt = (currentTime - lastUpdateTime);
 		int32_t timeToSleep = tickInterval - dt;

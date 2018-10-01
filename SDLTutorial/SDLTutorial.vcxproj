@@ -133,10 +133,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Dot.cpp" />
+    <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="LTexture.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,10 +148,9 @@
     <Image Include="..\foo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Dot.h" />
+    <ClInclude Include="Paddle.h" />
     <ClInclude Include="LTexture.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="Paddle.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
