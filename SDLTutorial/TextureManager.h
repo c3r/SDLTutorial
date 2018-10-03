@@ -21,17 +21,9 @@ public:
 	void clearTextureMap();
 	void clearFromTextureMap(std::string id);
 
-	void draw(std::string id, int x, int y, int width, int height,
-		SDL_Renderer* pRenderer, SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void draw(std::string id, int x, int y, SDL_Rect* pClip = NULL);
 
-	void drawFrame(std::string id, int x, int y, int width, int height, int currentRow,
-		int currentFrame, SDL_Renderer* pRenderer, double angle, int alpha,
-		SDL_RendererFlip = SDL_FLIP_NONE);
-
-	void drawTile(std::string id, int margin, int spacing, int x, int y, int widht,
-		int height, int currentRow, int currentFrame, SDL_Renderer* pRenderer);
-
-	std::map<std::string, LTexture*> getTextureMap() { return m_textureMap;  }
+	std::map<std::string, LTexture*> getTextureMap() { return m_textureMap; }
 
 private:
 	TextureManager();

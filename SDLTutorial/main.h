@@ -18,8 +18,8 @@
 //#include <iomanip>
 //#include <map>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SW = 640;
+const int SH = 480;
 
 bool init();
 

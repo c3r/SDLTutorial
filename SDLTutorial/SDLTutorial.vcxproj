@@ -133,6 +133,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="LTexture.cpp" />
     <ClCompile Include="main.cpp" />
@@ -148,6 +149,8 @@
     <Image Include="..\foo.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="LTexture.h" />
     <ClInclude Include="main.h" />

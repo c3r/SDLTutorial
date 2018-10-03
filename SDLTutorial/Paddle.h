@@ -1,25 +1,36 @@
-#ifndef __PADDLE__
-#define __PADDLE__
+#pragma once
 #include "LTexture.h"
+#include <map>
 
 class Paddle
 {
 public:
-	static const int DOT_WIDTH = 20;
-	static const int DOT_HEIGHT = 20;
-	static const int DOT_VEL = 10;
+	static const int WIDTH = 15;
+	static const int HEIGHT = 100;
+	static const int VEL = 3;
 
-	Paddle(uint16_t screenW, uint16_t screenH, LTexture* pRednerer);
+	Paddle(std::string textureId, 
+		SDL_Point* startPos,
+		uint16_t screenW, 
+		uint16_t screenH, 
+		SDL_Keycode upKey, 
+		SDL_Keycode downKey,
+		SDL_Rect* clipRect);
+
 	Paddle();
 
 	void handleEvent(SDL_Event& e);
 	void move();
-	void render();
+	void render(SDL_Renderer* renderer);
+	SDL_Rect* getCollider();
 
 private:
-	int m_posX, m_posY;
-	int m_velX, m_velY;
-	LTexture* m_pTexture;
-	int m_screenWidth, m_screenHeight;
+	SDL_Keycode upKey, downKey;
+	std::string textureId;
+	SDL_Point* position;
+	SDL_Point vel;
+	int scrW, scrH;
+	std::map<SDL_Keycode, Sint8> keymap;
+	SDL_Rect* clip;
+	SDL_Rect collider;
 };
-#endif

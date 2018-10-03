@@ -1,5 +1,7 @@
 #include "main.h"
 #include "Paddle.h"
+#include "Ball.h"
+#include "TextureManager.h"
 
 bool init()
 {
@@ -16,8 +18,8 @@ bool init()
 	gWindow = SDL_CreateWindow("SDL Tutorial",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+		SW,
+		SH,
 		SDL_WINDOW_SHOWN);
 
 	if (gWindow == NULL) {
@@ -60,11 +62,16 @@ void close()
 }
 
 
-void render(Paddle *dot)
+void render(Paddle* p1, Paddle* p2, Ball* b)
 {
 	SDL_SetRenderDrawColor(gRenderer, 0x10, 0x30, 0x60, 0xFF);
 	SDL_RenderClear(gRenderer);
-	dot->render();
+
+	TheTextureManager::Instance()->draw("_bg_", 0, 0);
+
+	p1->render(gRenderer);
+	p2->render(gRenderer);
+	b->render(gRenderer);
 	SDL_RenderPresent(gRenderer);
 }
 
@@ -74,7 +81,7 @@ std::vector<SDL_Event>& GetFrameEvents()
 	return frame_events;
 }
 
-void handleEvents(Paddle *dot)
+void handleEvents(Paddle* paddle1, Paddle* paddle2, Ball* ball)
 {
 	SDL_Event _event;
 	while (SDL_PollEvent(&_event) != 0) {
@@ -85,32 +92,60 @@ void handleEvents(Paddle *dot)
 		if (event.type == SDL_QUIT)
 			gQuit = true;
 
-		dot->handleEvent(event);
+		paddle1->handleEvent(event);
+		paddle2->handleEvent(event);
+		ball->handleEvent(event);
 	}
 }
 
-void updateState(Paddle *dot) 
+void updateState(Paddle* paddle1, Paddle* paddle2, Ball* ball, uint32_t cTime)
 {
-	dot->move();
+	paddle1->move();
+	paddle2->move();
+	ball->move(paddle1, paddle2, cTime);
 }
 
-int main(int argc, char* args[]) 
+int main(int argc, char* args[])
 {
 	if (!init()) {
 		printf("Failed to initialize!\n");
 		return 0;
 	}
 
-	LTexture *dotTexture = new LTexture(gRenderer);
-	dotTexture->loadFromFile("img/dot.bmp");
-	Paddle *dot = new Paddle(SCREEN_WIDTH, SCREEN_HEIGHT, dotTexture);
+	// Init game objects 	
+	TheTextureManager::Instance()->load("img/sprites.png", "_sprites_", gRenderer);
+	TheTextureManager::Instance()->load("img/bg.png", "_bg_", gRenderer);
 
+	// Paddles
+	Paddle* paddle_1 = new Paddle("p1",
+		new SDL_Point{ Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 },
+		SW,
+		SH,
+		SDLK_w,
+		SDLK_s,
+		new SDL_Rect { 0, 0, Paddle::WIDTH, Paddle::HEIGHT });
+
+	Paddle* paddle_2 = new Paddle("p2",
+		new SDL_Point{ SW - 2 * Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 },
+		SW,
+		SH,
+		SDLK_UP,
+		SDLK_DOWN,
+		new SDL_Rect{ Paddle::WIDTH, 0, Paddle::WIDTH, Paddle::HEIGHT });
+
+	// Ball
+	Ball* ball = new Ball("_sprites_",
+		new SDL_Point{ SW / 2 - Ball::WIDTH / 2, SH / 2 - Ball::HEIGHT / 2 },
+		SW, SH,
+		new SDL_Rect{ 100, 0, Ball::WIDTH, Ball::HEIGHT });
+
+	// Frame rate governing
 	int32_t ticksPerSecond = 60;
-	int32_t tickInterval = 1000 / ticksPerSecond; // frequency in Hz to period in ms
+	int32_t tickInterval = 1000 / ticksPerSecond;
 	uint32_t lastUpdateTime = 0;
 	double dt = 0;
 
-	while (!gQuit) 
+	while (!gQuit)
 	{
 		uint32_t currentTime = SDL_GetTicks();
 		dt = (currentTime - lastUpdateTime);
@@ -119,16 +154,14 @@ int main(int argc, char* args[])
 		if (timeToSleep > 0)
 			SDL_Delay(timeToSleep);
 
-		handleEvents(dot);
-		updateState(dot);
-		render(dot);
+		handleEvents(paddle_1, paddle_2, ball);
+		updateState(paddle_1, paddle_2, ball, currentTime);
+		render(paddle_1, paddle_2, ball);
 
 		lastUpdateTime = currentTime;
 
 		GetFrameEvents().clear();
 	}
-
-	dotTexture->free(); // TODO: przeniesc gdzies 
 
 	close();
 	system("pause");

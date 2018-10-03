@@ -1,62 +1,74 @@
-#include "Paddle.h"
 #include <map>
 #include <iostream>
+#include "Paddle.h"
+#include "TextureManager.h"
 
-Paddle::Paddle(uint16_t screenW, uint16_t screenH, LTexture* pTexture)
+Paddle::Paddle(std::string textureId,
+	SDL_Point* pStartPos,
+	uint16_t screenW,
+	uint16_t screenH,
+	SDL_Keycode upKey,
+	SDL_Keycode downKey,
+	SDL_Rect* clipRect)
 {
-	m_posX = 0;
-	m_posY = 0;
+	textureId = textureId;
+	upKey = upKey;
+	downKey = downKey;
 
-	m_velX = 0;
-	m_velY = 0;
+	position = pStartPos;
+	vel = { 0, 0 };
 
-	m_pTexture = pTexture;
+	scrH = screenH; // TODO: Externalize!
+	scrW = screenW;
 
-	m_screenHeight = screenH;
-	m_screenWidth = screenW;
+	keymap = { {downKey, Paddle::VEL}, {upKey, -Paddle::VEL} };
+	clip = clipRect;
+	collider = { position->x, position->y, Paddle::WIDTH, Paddle::HEIGHT };
 }
 
 Paddle::Paddle()
 {
-	m_posX = 0;
-	m_posY = 0;
-
-	m_velX = 0;
-	m_velY = 0;
-
-	m_pTexture = NULL;
-
-	m_screenHeight = 0;
-	m_screenWidth = 0;
+	position = new SDL_Point { 0, 0 };
+	vel = { 0,0 };
+	scrH = 0;
+	scrW = 0;
 }
 
 void Paddle::handleEvent(SDL_Event& e)
 {
-	static std::map<SDL_Keycode, Sint8> keymap{ {SDLK_DOWN, 5}, {SDLK_UP, -5} };
-
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-		m_velY += keymap[e.key.keysym.sym];
+		vel.y += keymap[e.key.keysym.sym];
 	}
 
 	if (e.type == SDL_KEYUP && e.key.repeat == 0) {
-		m_velY -= keymap[e.key.keysym.sym];
+		vel.y -= keymap[e.key.keysym.sym];
 	}
 }
 
 void Paddle::move()
 {
-	m_posX += m_velX;
-	if ((m_posX < 0) || (m_posX + DOT_WIDTH > m_screenWidth)) {
-		m_posX -= m_velX;
+	position->x += vel.x;
+	collider.x = position->x;
+	if ((position->x < 0) || (position->x + Paddle::WIDTH > scrW)) {
+		position->x -= vel.x;
+		collider.x = position->x;
 	}
 
-	m_posY += m_velY;
-	if ((m_posY < 0) || (m_posY + DOT_HEIGHT > m_screenHeight)) {
-		m_posY -= m_velY;
+	position->y += vel.y;
+	collider.y = position->y;
+	if ((position->y < 0) || (position->y + Paddle::HEIGHT > scrH)) {
+		position->y -= vel.y;
+		collider.y = position->y;
 	}
 }
 
-void Paddle::render()
+void Paddle::render(SDL_Renderer* pRenderer)
 {
-	m_pTexture->render(m_posX, m_posY);
+	SDL_SetRenderDrawColor(pRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	SDL_RenderFillRect(pRenderer, &collider);
+}
+
+SDL_Rect* Paddle::getCollider()
+{
+	return &collider;
 }
