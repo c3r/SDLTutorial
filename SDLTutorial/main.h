@@ -1,34 +1,24 @@
-#ifndef __MAIN__
-#define __MAIN__
+#pragma once 
 
-#ifndef __INCSDL__
-#include <SDL.h>
-#define __INCSDL__
-#endif
-
-//#include <string>
 #include <vector>
-
-//#include <SDL_image.h>
-//#include <SDL_ttf.h>
-//#include <stdio.h>
-//#include <cmath>
-//#include <sstream>
-//#include <iostream>
-//#include <iomanip>
-//#include <map>
+#include "LTexture.h"
+#include "Ball.h"
+#include "Paddle.h"
 
 const int SW = 640;
 const int SH = 480;
 
 bool init();
-
 void close();
-std::vector<SDL_Event>& GetFrameEvents();
+std::vector<SDL_Event>&
+GetFrameEvents();
+bool loadTTFMedia();
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
-bool gQuit = false;
+TTF_Font* gFont = NULL;
+LTexture* gRScore = NULL;
+LTexture* gLScore = NULL;
 
-#endif
+bool gQuit = false;

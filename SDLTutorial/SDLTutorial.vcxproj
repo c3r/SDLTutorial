@@ -137,6 +137,7 @@
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="LTexture.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ScreenText.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="LTexture.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="ScreenText.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
