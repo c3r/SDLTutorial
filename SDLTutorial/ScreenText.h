@@ -1,5 +1,5 @@
 #pragma once
-#include "Ltexture.h"
+#include "LTexture.h"
 #include <sstream>
 
 class ScreenText {

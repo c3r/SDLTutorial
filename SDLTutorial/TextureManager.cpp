@@ -1,7 +1,5 @@
 #include "TextureManager.h"
 #include "LTexture.h"
-#include <SDL.h>
-#include <SDL_image.h>
 
 TextureManager* TextureManager::s_pInstance = 0;
 

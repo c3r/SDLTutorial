@@ -28,7 +28,7 @@ Paddle::Paddle(std::string textureId,
     scrH = screenH; // TODO: Externalize!
     scrW = screenW;
 
-    m_keymap = { { downKey, Paddle::VEL }, { upKey, -Paddle::VEL } };
+    m_keymap = { { downKey, static_cast<int>(VELOCITY) }, { upKey, -1*static_cast<int>(VELOCITY) } };
     m_clip = clipRect;
     m_collider = { m_pos->x, m_pos->y, Paddle::WIDTH, Paddle::HEIGHT };
 }

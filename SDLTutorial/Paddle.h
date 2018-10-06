@@ -9,7 +9,7 @@ class Paddle {
 public:
     static const int WIDTH = 15;
     static const int HEIGHT = 100;
-    static const int VEL = 5;
+    static constexpr int VELOCITY = 5;
 
     Paddle(std::string textureId,
         SDL_Point* startPos,
@@ -39,7 +39,7 @@ private:
     std::string m_textureId;
     SDL_Point* m_pos;
     SDL_Point m_vel;
-    std::map<SDL_Keycode, Sint8> m_keymap;
+    std::map<SDL_Keycode, int> m_keymap;
     SDL_Rect* m_clip;
     SDL_Rect m_collider;
     int m_points;
