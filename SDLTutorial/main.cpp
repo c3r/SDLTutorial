@@ -151,11 +151,11 @@ int main(int argc, char* args[])
     }
 
     // Init game objects
-    //TheTextureManager::Instance()->load("img/sprites.png", "_sprites_", gRenderer);
     TheTextureManager::Instance()->load("img/bg.png", "_bg_", gRenderer);
 
     // Paddles
-    Paddle* paddle_1 = new Paddle("p1",
+    Paddle* paddle_1 = new Paddle(
+        "p1",
         new SDL_Point{ Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 },
         SW,
         SH,
@@ -163,7 +163,8 @@ int main(int argc, char* args[])
         SDLK_s,
 		SDLK_a,
 		SDLK_d,
-        new SDL_Rect{ 0, 0, Paddle::WIDTH, Paddle::HEIGHT });
+        new SDL_Rect{ 0, 0, Paddle::WIDTH, Paddle::HEIGHT }, 
+        SERVE_DIRECTION_RIGHT);
 
     Paddle* paddle_2 = new Paddle(
         "p2",
@@ -174,7 +175,8 @@ int main(int argc, char* args[])
         SDLK_DOWN,
         SDLK_LEFT,
         SDLK_RIGHT,
-        new SDL_Rect{ Paddle::WIDTH, 0, Paddle::WIDTH, Paddle::HEIGHT });
+        new SDL_Rect{ Paddle::WIDTH, 0, Paddle::WIDTH, Paddle::HEIGHT }, 
+        SERVE_DIRECTION_LEFT);
 
     // Ball
     Ball* ball = new Ball(

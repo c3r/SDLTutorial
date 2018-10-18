@@ -1,5 +1,5 @@
-#include "Paddle.h"
 #include "Ball.h"
+#include "Paddle.h"
 #include "TextureManager.h"
 #include <iostream>
 #include <map>
@@ -12,13 +12,15 @@ Paddle::Paddle(std::string textureId,
     SDL_Keycode downKey,
 	SDL_Keycode leftKey,
 	SDL_Keycode rightKey,
-    SDL_Rect* clipRect)
+    SDL_Rect* clipRect,
+    short int serveDirection)
 {
     textureId = textureId;
     m_upKey = upKey;
     m_downKey = downKey;
     m_leftKey = leftKey;
     m_rightKey = rightKey;
+    m_serveDirection = serveDirection;
 
     m_points = 0;
 
@@ -28,7 +30,9 @@ Paddle::Paddle(std::string textureId,
     scrH = screenH; // TODO: Externalize!
     scrW = screenW;
 
-    m_keymap = { { downKey, static_cast<int>(VELOCITY) }, { upKey, -1*static_cast<int>(VELOCITY) } };
+    m_keymap = { { downKey, static_cast<int>(Paddle::VELOCITY) }, 
+               { upKey, -1*static_cast<int>(Paddle::VELOCITY) } };
+               
     m_clip = clipRect;
     m_collider = { m_pos->x, m_pos->y, Paddle::WIDTH, Paddle::HEIGHT };
 }
@@ -39,6 +43,11 @@ Paddle::Paddle()
     m_vel = { 0, 0 };
     scrH = 0;
     scrW = 0;
+}
+
+short int Paddle::getServeDirection() 
+{
+    return m_serveDirection;
 }
 
 void Paddle::handleEvent(SDL_Event& e)
@@ -56,20 +65,38 @@ void Paddle::handleEvent(SDL_Event& e)
         if (e.key.keysym.sym == m_leftKey)	{ m_vel.x += 5; return; }
         if (e.key.keysym.sym == m_rightKey)	{ m_vel.x -= 5; return; }
     }
+
+    if (e.type == SDL_KEYUP && e.key.repeat == 0) {
+        if (e.key.keysym.sym == SDLK_SPACE && m_stickingBall != nullptr) 
+        {
+            m_stickingBall->unstick(this);
+            m_stickingBall = nullptr; 
+        }
+    }
 }
 
 void Paddle::move()
 {
     m_pos->x += m_vel.x;
     m_collider.x = m_pos->x;
-    if ((m_pos->x < 0) || (m_pos->x + Paddle::WIDTH > scrW)) {
+
+    int bw = Ball::WIDTH;
+    int pw = Paddle::WIDTH;
+    int ph = Paddle::HEIGHT;
+    int middle = scrW/2;
+
+    // TODO: Create midblock collider and check for collision here.
+    bool midBlock = m_pos->x < middle - pw - bw 
+                 || m_pos->x > middle + bw;
+
+    if ((m_pos->x < 0) || !midBlock || (m_pos->x + pw > scrW)) {
         m_pos->x -= m_vel.x;
         m_collider.x = m_pos->x;
     }
 
     m_pos->y += m_vel.y;
     m_collider.y = m_pos->y;
-    if ((m_pos->y < 0) || (m_pos->y + Paddle::HEIGHT > scrH)) {
+    if ((m_pos->y < 0) || (m_pos->y + ph > scrH)) {
         m_pos->y -= m_vel.y;
         m_collider.y = m_pos->y;
     }
@@ -93,20 +120,14 @@ std::string Paddle::getPoints()
     return ss.str();
 }
 
-SDL_Point* Paddle::getBallServePositionLeft()
-{
-    return new SDL_Point{ m_pos->x + Paddle::WIDTH,
-        m_pos->y + Paddle::HEIGHT / 2 };
-}
-
-SDL_Point* Paddle::getBallServePositionRight()
-{
-    return new SDL_Point{ m_pos->x - Ball::WIDTH, m_pos->y + Paddle::HEIGHT / 2 };
-}
-
-void Paddle::stickToPaddle(Ball* ball)
+void Paddle::stick(Ball* ball)
 {
     m_stickingBall = ball;
+}
+
+bool Paddle::isBallSticking(Ball* ball)
+{
+    return ball == m_stickingBall;
 }
 
 void Paddle::render(SDL_Renderer* pRenderer)

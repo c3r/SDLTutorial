@@ -19,7 +19,8 @@ public:
         SDL_Keycode downKey,
         SDL_Keycode leftKey,
         SDL_Keycode rightKey,
-        SDL_Rect* clipRect);
+        SDL_Rect* clipRect,
+        short int serveDirection);
 
     Paddle();
 
@@ -32,7 +33,9 @@ public:
     void addPoint();
     SDL_Point* getBallServePositionLeft();
     SDL_Point* getBallServePositionRight();
-    void stickToPaddle(Ball* ball);
+    void stick(Ball* ball);
+    bool isBallSticking(Ball *ball);
+    short int getServeDirection();
 
 private:
     SDL_Keycode m_upKey, m_downKey, m_leftKey, m_rightKey;
@@ -42,8 +45,9 @@ private:
     std::map<SDL_Keycode, int> m_keymap;
     SDL_Rect* m_clip;
     SDL_Rect m_collider;
-    int m_points;
+    short int m_points;
     Ball* m_stickingBall;
+    short int m_serveDirection;
 
     // TODO: externalize!
     int scrW, scrH;

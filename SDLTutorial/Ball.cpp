@@ -15,7 +15,6 @@ Ball::Ball(std::string textureId,
     screenWidth = screenW;
     m_clip = clipRect;
     m_collider = { m_pos->x, m_pos->y, Ball::WIDTH, Ball::HEIGHT };
-    //m_stickPaddle = NULL;
 }
 
 Ball::~Ball() {}
@@ -24,45 +23,57 @@ void Ball::handleEvent(SDL_Event& e)
 {
 }
 
-void Ball::checkForScore(Paddle* lPaddle, Paddle* rPaddle)
+void Ball::handleScore(Paddle* lp, Paddle* rp)
 {
     // Right scores
     if (m_pos->x + Ball::WIDTH < 0) {
-        rPaddle->addPoint();
-        m_pos = lPaddle->getBallServePositionLeft();
-        stickToPaddle(lPaddle);
-        m_vel = { 0, 0 };
-    }
+        rp->addPoint();
+        lp->stick(this);
 
+        m_pos = new SDL_Point { 
+            lp->getPosition()->x + Paddle::WIDTH,
+            lp->getPosition()->y + Paddle::HEIGHT / 2 };
+
+        m_vel = { 0, 0 };
+        return;
+    }
     // Left scores
     if (m_pos->x - Ball::WIDTH > screenWidth) {
-        lPaddle->addPoint();
-        m_pos = rPaddle->getBallServePositionRight();
-        stickToPaddle(rPaddle);
+        lp->addPoint();
+        rp->stick(this);
+
+        m_pos = new SDL_Point { 
+            rp->getPosition()->x - Paddle::WIDTH,
+            rp->getPosition()->y + Paddle::HEIGHT / 2 };
+        
         m_vel = { 0, 0 };
+        return;
     }
 }
 
-void Ball::stickToPaddle(Paddle* paddle)
+void Ball::unstick(Paddle* p)
 {
-    m_stickPaddle = paddle;
-    paddle->stickToPaddle(this);
+    m_vel.x = p->getServeDirection() * Ball::VEL +2 ;
+    m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2;
 }
 
 void Ball::move(Paddle* lp, Paddle* rp)
 {
-	 // Check for sticking paddle
-    if (m_stickPaddle == rp) {
-        m_pos = m_stickPaddle->getBallServePositionRight();
+    if (lp->isBallSticking(this)) {
+        m_pos = new SDL_Point { 
+            lp->getPosition()->x + Paddle::WIDTH,
+            lp->getPosition()->y + Paddle::HEIGHT / 2 };
         return;
     }
 
-    if (m_stickPaddle == lp) {
-        m_pos = m_stickPaddle->getBallServePositionLeft();
+    if (rp->isBallSticking(this)) {
+        m_pos = new SDL_Point { 
+            rp->getPosition()->x - Ball::WIDTH,
+            rp->getPosition()->y + Paddle::HEIGHT / 2 };
         return;
     }
 
-    // Accelerate
+    // deaccelerate
     if (m_vel.x > 0.05) {
         m_vel = { m_vel.x - 0.105, m_vel.y };
     }
@@ -75,13 +86,13 @@ void Ball::move(Paddle* lp, Paddle* rp)
     m_collider.y = m_pos->y += m_vel.y; // Move in Y axis
 
     // Check for score
-    checkForScore(lp, rp);
+    handleScore(lp, rp);
 
     // Check for collisions
-    if (checkCollisionWithPaddle(lp)) {
+    if (collision(lp)) {
         m_vel.x = Ball::VEL;
     }
-    if (checkCollisionWithPaddle(rp)) {
+    if (collision(rp)) {
         m_vel.x = -Ball::VEL;
     }
 
@@ -93,7 +104,7 @@ void Ball::move(Paddle* lp, Paddle* rp)
     }
 }
 
-bool Ball::checkCollisionWithPaddle(Paddle* paddle)
+bool Ball::collision(Paddle* paddle)
 {
     if (paddle == NULL)
         return false;
@@ -127,9 +138,3 @@ void Ball::render(SDL_Renderer* pRenderer)
     drawCircle(
         pRenderer, new SDL_Point{ m_pos->x + radius, m_pos->y + radius }, radius);
 }
-
-//void Ball::stickToPaddle(Paddle* pPaddle)
-//{
-//    m_stickPaddle = pPaddle;
-//    pPaddle->stickToPaddle(this);
-//}

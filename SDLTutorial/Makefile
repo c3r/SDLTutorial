@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project 
-OBJS = main.cpp LTexture.cpp TextureManager.cpp Paddle.cpp Ball.cpp
+OBJS = main.cpp LTexture.cpp TextureManager.cpp Ball.cpp Paddle.cpp
 
 #CC specifies which compiler we're using 
 CC = g++

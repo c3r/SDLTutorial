@@ -21,10 +21,10 @@ public:
 
     void handleEvent(SDL_Event& e);
     void move(Paddle* paddle1, Paddle* paddle2);
-    bool checkCollisionWithPaddle(Paddle* paddle);
+    bool collision(Paddle* paddle);
     void render(SDL_Renderer* renderer);
-    void stickToPaddle(Paddle* paddle);
-
+    void stickTo(Paddle* paddle);
+    void unstick(Paddle* paddle); // TODO: serve() ?
 
 private:
 
@@ -33,9 +33,8 @@ private:
     SDL_Rect* m_clip;
     SDL_Rect m_collider;
     std::string m_textureId;
-    Paddle* m_stickPaddle;
 
     // Externalize!
     int screenWidth, screenHeight;
-    void checkForScore(Paddle* leftPaddle, Paddle* rightPaddle);
+    void handleScore(Paddle* leftPaddle, Paddle* rightPaddle);
 };

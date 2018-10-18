@@ -7,6 +7,8 @@
 
 const int SW = 640;
 const int SH = 480;
+const int SERVE_DIRECTION_LEFT = -1;
+const int SERVE_DIRECTION_RIGHT = 1;
 
 bool init();
 void close();
