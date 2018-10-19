@@ -54,7 +54,7 @@ void Ball::handleScore(Paddle* lp, Paddle* rp)
 void Ball::unstick(Paddle* p)
 {
     m_vel.x = p->getServeDirection() * Ball::VEL +2 ;
-    m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2;
+    m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2; // TODO: zrobic to jakos lepiej, lol
 }
 
 void Ball::move(Paddle* lp, Paddle* rp)
@@ -73,13 +73,14 @@ void Ball::move(Paddle* lp, Paddle* rp)
         return;
     }
 
+    // TODO: zrobic zwalnianie tak zeby to mialo sens i bylo SYMETRYCZNE
     // deaccelerate
-    if (m_vel.x > 0.05) {
-        m_vel = { m_vel.x - 0.105, m_vel.y };
-    }
-    if (m_vel.x < -0.05) {
-        m_vel = { m_vel.x + 0.11, m_vel.y };
-    }
+    // if (m_vel.x > 0.08) {
+    //     m_vel = { m_vel.x - 0.105, m_vel.y };
+    // }
+    // if (m_vel.x < -0.08) {
+    //     m_vel = { m_vel.x + 0.11, m_vel.y };
+    // }
 
     // Move
     m_collider.x = m_pos->x += m_vel.x; // Move in x axis

@@ -9,7 +9,7 @@ class Ball {
 public:
     static const int WIDTH = 20;
     static const int HEIGHT = 20;
-    static const int VEL = 12;
+    static const int VEL = 5;
 
     Ball(std::string textureId,
         SDL_Point* startingPos,
