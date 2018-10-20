@@ -25,6 +25,7 @@ public:
     Paddle();
 
     void handleEvent(SDL_Event& e);
+	SDL_Point * getMiddlePoint();
     void move();
     void render(SDL_Renderer* renderer);
     SDL_Point* getPosition();

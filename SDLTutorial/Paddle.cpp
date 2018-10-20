@@ -76,6 +76,12 @@ void Paddle::handleEvent(SDL_Event& e)
     }
 }
 
+SDL_Point* Paddle::getMiddlePoint()
+{
+	return new SDL_Point { m_pos->x + Paddle::WIDTH / 2, 
+						   m_pos->y + Paddle::HEIGHT / 2 };
+}
+
 void Paddle::move()
 {
     m_pos->x += m_vel.x;

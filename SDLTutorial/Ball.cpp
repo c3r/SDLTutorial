@@ -48,18 +48,21 @@ void Ball::unstick(Paddle* p)
 
 void Ball::move(Paddle* lp, Paddle* rp)
 {
-    if (lp->isBallSticking(this)) {
-        pos = new SDL_Point { 
-            lp->getPosition()->x + Paddle::WIDTH,
-            lp->getPosition()->y + Paddle::HEIGHT / 2 };
-        return;
-    }
+	Paddle* s = nullptr;
 
-    if (rp->isBallSticking(this)) {
-        pos = new SDL_Point { 
-            rp->getPosition()->x - Ball::WIDTH,
-            rp->getPosition()->y + Paddle::HEIGHT / 2 };
-        return;
+	// TODO: Private member "stickingPaddle"
+	if (lp->isBallSticking(this)) s = lp;
+	if (rp->isBallSticking(this)) s = rp;
+
+    if (s != nullptr) {
+		SDL_Point* pmp = s->getMiddlePoint();
+		int dir = s->getServeDirection();
+
+		pos->x = pmp->x + dir * (Paddle::WIDTH / 2 + Ball::WIDTH / 2) - Ball::WIDTH / 2;
+		pos->y = pmp->y - Ball::WIDTH / 2;
+
+		// The ball is sticking, so no further position calc is needed.
+        return; 
     }
 
     // TODO: zrobic zwalnianie tak zeby to mialo sens i bylo SYMETRYCZNE

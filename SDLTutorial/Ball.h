@@ -21,6 +21,7 @@ public:
 
     void handleEvent(SDL_Event& e);
     void move(Paddle* paddle1, Paddle* paddle2);
+	void setMiddlePoint(SDL_Point * point);
     bool collision(Paddle* paddle);
     void render(SDL_Renderer* renderer);
     void stickTo(Paddle* paddle);
