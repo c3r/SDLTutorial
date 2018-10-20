@@ -1,6 +1,7 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include <cstdlib>
+#include <cmath>
 
 Ball::Ball(std::string textureId,
     SDL_Point* startingPos,
@@ -9,12 +10,12 @@ Ball::Ball(std::string textureId,
     SDL_Rect* clipRect)
 {
     textureId = textureId;
-    m_pos = startingPos;
-    m_vel = { Ball::VEL, 2 };
+    pos = startingPos;
+    vel = { Ball::VEL, 2 };
     screenHeight = screenH;
     screenWidth = screenW;
-    m_clip = clipRect;
-    m_collider = { m_pos->x, m_pos->y, Ball::WIDTH, Ball::HEIGHT };
+    clip = clipRect;
+    collider = { pos->x, pos->y, Ball::WIDTH, Ball::HEIGHT };
 }
 
 Ball::~Ball() {}
@@ -26,48 +27,48 @@ void Ball::handleEvent(SDL_Event& e)
 void Ball::handleScore(Paddle* lp, Paddle* rp)
 {
     // Right scores
-    if (m_pos->x + Ball::WIDTH < 0) {
+    if (pos->x + Ball::WIDTH < 0) {
         rp->addPoint();
         lp->stick(this);
 
-        m_pos = new SDL_Point { 
+        pos = new SDL_Point { 
             lp->getPosition()->x + Paddle::WIDTH,
             lp->getPosition()->y + Paddle::HEIGHT / 2 };
 
-        m_vel = { 0, 0 };
+        vel = { 0, 0 };
         return;
     }
     // Left scores
-    if (m_pos->x - Ball::WIDTH > screenWidth) {
+    if (pos->x - Ball::WIDTH > screenWidth) {
         lp->addPoint();
         rp->stick(this);
 
-        m_pos = new SDL_Point { 
+        pos = new SDL_Point { 
             rp->getPosition()->x - Paddle::WIDTH,
             rp->getPosition()->y + Paddle::HEIGHT / 2 };
         
-        m_vel = { 0, 0 };
+        vel = { 0, 0 };
         return;
     }
 }
 
 void Ball::unstick(Paddle* p)
 {
-    m_vel.x = p->getServeDirection() * Ball::VEL;
+    vel.x = p->getServeDirection() * Ball::VEL;
     //m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2; // TODO: zrobic to jakos lepiej, lol
 }
 
 void Ball::move(Paddle* lp, Paddle* rp)
 {
     if (lp->isBallSticking(this)) {
-        m_pos = new SDL_Point { 
+        pos = new SDL_Point { 
             lp->getPosition()->x + Paddle::WIDTH,
             lp->getPosition()->y + Paddle::HEIGHT / 2 };
         return;
     }
 
     if (rp->isBallSticking(this)) {
-        m_pos = new SDL_Point { 
+        pos = new SDL_Point { 
             rp->getPosition()->x - Ball::WIDTH,
             rp->getPosition()->y + Paddle::HEIGHT / 2 };
         return;
@@ -83,27 +84,27 @@ void Ball::move(Paddle* lp, Paddle* rp)
     // }
 
     // Move
-    m_collider.x = m_pos->x += m_vel.x; // Move in x axis
-    m_collider.y = m_pos->y += m_vel.y; // Move in Y axis
+    collider.x = pos->x += vel.x; // Move in x axis
+    collider.y = pos->y += vel.y; // Move in Y axis
 
     // Check for score
     handleScore(lp, rp);
 
     // Check for collisions
     if (collision(lp)) {
-        m_vel.x = Ball::VEL;
-		m_vel.y = m_vel.y + lp->getVel()->y;
+		vel.x = abs(vel.x) + lp->getVel()->x;
+		vel.y = vel.y + lp->getVel()->y;
     }
     if (collision(rp)) {
-        m_vel.x = -Ball::VEL;
-		m_vel.y = m_vel.y + lp->getVel()->y;
+		vel.x = -abs(vel.x) + rp->getVel()->x;
+		vel.y =  vel.y + rp->getVel()->y;
     }
 
     // Wall collision
-    if ((m_pos->y < 0) || (m_pos->y + Ball::HEIGHT > screenHeight)) {
-        m_pos->y -= m_vel.y;
-        m_vel.y = -m_vel.y;
-        m_collider.y = m_pos->y;
+    if ((pos->y < 0) || (pos->y + Ball::HEIGHT > screenHeight)) {
+        pos->y -= vel.y;
+        vel.y = -vel.y;
+        collider.y = pos->y;
     }
 }
 
@@ -114,8 +115,8 @@ bool Ball::collision(Paddle* paddle)
 
     SDL_Rect* pc = paddle->getCollider();
 
-    int lb = m_collider.x, rb = m_collider.x + m_collider.w, tb = m_collider.y,
-        bb = m_collider.y + m_collider.h;
+    int lb = collider.x, rb = collider.x + collider.w, tb = collider.y,
+        bb = collider.y + collider.h;
 
     int lp = pc->x, rp = pc->x + pc->w, tp = pc->y, bp = pc->y + pc->h;
 
@@ -139,5 +140,5 @@ void Ball::render(SDL_Renderer* pRenderer)
 {
     uint8_t radius = Ball::WIDTH / 2;
     drawCircle(
-        pRenderer, new SDL_Point{ m_pos->x + radius, m_pos->y + radius }, radius);
+        pRenderer, new SDL_Point{ pos->x + radius, pos->y + radius }, radius);
 }

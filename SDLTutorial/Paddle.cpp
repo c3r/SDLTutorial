@@ -138,7 +138,7 @@ bool Paddle::isBallSticking(Ball* ball)
 
 void Paddle::render(SDL_Renderer* pRenderer)
 {
-    SDL_SetRenderDrawColor(pRenderer, 0xFF, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(pRenderer, 0xFF, 0xFF, 0xFF, 0xAA);
     SDL_RenderFillRect(pRenderer, &m_collider);
 }
 

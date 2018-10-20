@@ -9,7 +9,7 @@ class Ball {
 public:
     static const int WIDTH = 20;
     static const int HEIGHT = 20;
-    static const int VEL = 5;
+    static const int VEL = 4;
 
     Ball(std::string textureId,
         SDL_Point* startingPos,
@@ -28,13 +28,13 @@ public:
 
 private:
 
-    SDL_Point* m_pos;
-    Velocity m_vel;
-    SDL_Rect* m_clip;
-    SDL_Rect m_collider;
-    std::string m_textureId;
+    SDL_Point* pos;
+    Velocity vel;
+    SDL_Rect* clip;
+    SDL_Rect collider;
+    std::string textureId;
 
     // Externalize!
     int screenWidth, screenHeight;
-    void handleScore(Paddle* leftPaddle, Paddle* rightPaddle);
+    void handleScore(Paddle* lp, Paddle* rp);
 };
