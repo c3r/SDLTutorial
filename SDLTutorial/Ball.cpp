@@ -86,8 +86,7 @@ void Ball::collide(Paddle* cp)
 	if (cp == nullptr) return;
 
 	// abs
-	if (vel.x < 0)
-		vel.x = -vel.x;
+	if (vel.x < 0) vel.x *= -1;
 
 	vel.x = cp->getServeDirection() * abs(vel.x) + cp->getVel()->x;
 	vel.y = vel.y + cp->getVel()->y;
@@ -99,10 +98,15 @@ bool Ball::collision(Paddle* paddle)
 
     SDL_Rect* pc = paddle->getCollider();
 
-    int lb = collider.x, rb = collider.x + collider.w, tb = collider.y,
+    int lb = collider.x, 
+		rb = collider.x + collider.w, 
+		tb = collider.y,
         bb = collider.y + collider.h;
 
-    int lp = pc->x, rp = pc->x + pc->w, tp = pc->y, bp = pc->y + pc->h;
+    int lp = pc->x, 
+		rp = pc->x + pc->w, 
+		tp = pc->y, 
+		bp = pc->y + pc->h;
 
     return !(bb <= tp || tb >= bp || rb <= lp || lb >= rp);
 }
