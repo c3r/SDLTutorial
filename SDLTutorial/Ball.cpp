@@ -96,6 +96,7 @@ void Ball::move(Paddle* lp, Paddle* rp)
     }
     if (collision(rp)) {
         m_vel.x = -Ball::VEL;
+		m_vel.y = m_vel.y + lp->getVel()->y;
     }
 
     // Wall collision
