@@ -24,32 +24,20 @@ void Ball::handleEvent(SDL_Event& e)
 {
 }
 
-void Ball::handleScore(Paddle* lp, Paddle* rp)
+void Ball::checkForScore(Paddle* lp, Paddle* rp)
+{	
+	if (pos->x + Ball::WIDTH < 0)
+		handleScore(rp, lp);
+	
+	if (pos->x - Ball::WIDTH > screenWidth)
+		handleScore(lp, rp);	
+}
+
+void Ball::handleScore(Paddle* scoring, Paddle* serving)
 {
-    // Right scores
-    if (pos->x + Ball::WIDTH < 0) {
-        rp->addPoint();
-        lp->stick(this);
-
-        pos = new SDL_Point { 
-            lp->getPosition()->x + Paddle::WIDTH,
-            lp->getPosition()->y + Paddle::HEIGHT / 2 };
-
-        vel = { 0, 0 };
-        return;
-    }
-    // Left scores
-    if (pos->x - Ball::WIDTH > screenWidth) {
-        lp->addPoint();
-        rp->stick(this);
-
-        pos = new SDL_Point { 
-            rp->getPosition()->x - Paddle::WIDTH,
-            rp->getPosition()->y + Paddle::HEIGHT / 2 };
-        
-        vel = { 0, 0 };
-        return;
-    }
+	scoring->addPoint();
+	serving->stick(this);
+	vel = { 0, 0 };
 }
 
 void Ball::unstick(Paddle* p)
@@ -88,7 +76,7 @@ void Ball::move(Paddle* lp, Paddle* rp)
     collider.y = pos->y += vel.y; // Move in Y axis
 
     // Check for score
-    handleScore(lp, rp);
+    checkForScore(lp, rp);
 
     // Check for collisions
     if (collision(lp)) {

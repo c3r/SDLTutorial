@@ -36,5 +36,6 @@ private:
 
     // Externalize!
     int screenWidth, screenHeight;
-    void handleScore(Paddle* lp, Paddle* rp);
+    void checkForScore(Paddle* lp, Paddle* rp);
+	void handleScore(Paddle * scoring, Paddle * serving);
 };
