@@ -17,10 +17,10 @@ GetFrameEvents();
 bool loadTTFMedia();
 
 SDL_Window* gWindow = NULL;
-SDL_Renderer* gRenderer = NULL;
+SDL_Renderer* g_renderer = NULL;
 
 TTF_Font* gFont = NULL;
-LTexture* gRScore = NULL;
-LTexture* gLScore = NULL;
+LTexture* g_rpScore = NULL;
+LTexture* g_lpScore = NULL;
 
 bool gQuit = false;

@@ -53,7 +53,7 @@ void Ball::handleScore(Paddle* lp, Paddle* rp)
 
 void Ball::unstick(Paddle* p)
 {
-    m_vel.x = p->getServeDirection() * Ball::VEL +2 ;
+    m_vel.x = p->getServeDirection() * Ball::VEL;
     m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2; // TODO: zrobic to jakos lepiej, lol
 }
 

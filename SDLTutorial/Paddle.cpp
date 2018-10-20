@@ -30,8 +30,8 @@ Paddle::Paddle(std::string textureId,
     scrH = screenH; // TODO: Externalize!
     scrW = screenW;
 
-    m_keymap = { { downKey, static_cast<int>(Paddle::VELOCITY) }, 
-               { upKey, -1*static_cast<int>(Paddle::VELOCITY) } };
+    m_keymap = {{ downKey, static_cast<int>(Paddle::VELOCITY) }, 
+               {  upKey,  -static_cast<int>(Paddle::VELOCITY)}};
                
     m_clip = clipRect;
     m_collider = { m_pos->x, m_pos->y, Paddle::WIDTH, Paddle::HEIGHT };
@@ -52,18 +52,19 @@ short int Paddle::getServeDirection()
 
 void Paddle::handleEvent(SDL_Event& e)
 {
+	int v = Paddle::VELOCITY;
     if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-        if (e.key.keysym.sym == m_upKey)	{ m_vel.y -= 5; return; }
-		if (e.key.keysym.sym == m_downKey)	{ m_vel.y += 5; return; }
-		if (e.key.keysym.sym == m_leftKey)	{ m_vel.x -= 5; return; }
-		if (e.key.keysym.sym == m_rightKey) { m_vel.x += 5; return; }
+        if (e.key.keysym.sym == m_upKey)	{ m_vel.y -= v; return; }
+		if (e.key.keysym.sym == m_downKey)	{ m_vel.y += v; return; }
+		if (e.key.keysym.sym == m_leftKey)	{ m_vel.x -= v; return; }
+		if (e.key.keysym.sym == m_rightKey) { m_vel.x += v; return; }
     }
 
     if (e.type == SDL_KEYUP && e.key.repeat == 0) {
-        if (e.key.keysym.sym == m_upKey)	{ m_vel.y += 5; return; }
-        if (e.key.keysym.sym == m_downKey)	{ m_vel.y -= 5; return; }
-        if (e.key.keysym.sym == m_leftKey)	{ m_vel.x += 5; return; }
-        if (e.key.keysym.sym == m_rightKey)	{ m_vel.x -= 5; return; }
+        if (e.key.keysym.sym == m_upKey)	{ m_vel.y += v; return; }
+        if (e.key.keysym.sym == m_downKey)	{ m_vel.y -= v; return; }
+        if (e.key.keysym.sym == m_leftKey)	{ m_vel.x += v; return; }
+        if (e.key.keysym.sym == m_rightKey)	{ m_vel.x -= v; return; }
     }
 
     if (e.type == SDL_KEYUP && e.key.repeat == 0) {

@@ -25,18 +25,18 @@ bool init()
     }
 
     // Create renderer for window
-    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    g_renderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 
-    if (gRenderer == NULL) {
+    if (g_renderer == NULL) {
         printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
 
-	gLScore = new LTexture(gRenderer);
-	gRScore = new LTexture(gRenderer);
+	g_lpScore = new LTexture(g_renderer);
+	g_rpScore = new LTexture(g_renderer);
 
     // Initialize renderer color
-    SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(g_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
     // Initialize PNG loading
     int imgFlags = IMG_INIT_PNG;
@@ -75,37 +75,37 @@ void close()
     gFont = NULL;
 
     // Destroy window
-    SDL_DestroyRenderer(gRenderer);
+    SDL_DestroyRenderer(g_renderer);
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
-    gRenderer = NULL;
+    g_renderer = NULL;
 
     // Quit SDL subsystems
     IMG_Quit();
     SDL_Quit();
 }
 
-void render(Paddle* pLeftPaddle, Paddle* pRightPaddle, Ball* pBall)
+void render(Paddle* lp, Paddle* rp, Ball* ball)
 {
-    SDL_SetRenderDrawColor(gRenderer, 0x10, 0x30, 0x60, 0xFF);
-    SDL_RenderClear(gRenderer);
+    SDL_SetRenderDrawColor(g_renderer, 0x10, 0x30, 0x60, 0xFF);
+    SDL_RenderClear(g_renderer);
 
     TheTextureManager::Instance()->draw("_bg_", 0, 0);
     
 	SDL_Color white = { 255, 255, 255, 255 };
-    int centerMargin = 20;
+    int centerScoreMargin = 20;
 
-    gLScore->loadFromRenderedText(pLeftPaddle->getPoints(), white, gFont);
-    gRScore->loadFromRenderedText(pRightPaddle->getPoints(), white, gFont);
+    g_lpScore->loadFromRenderedText(lp->getPoints(), white, gFont);
+    g_rpScore->loadFromRenderedText(rp->getPoints(), white, gFont);
 
-	gLScore->render(SW / 2 - centerMargin - gLScore->getWidth(), centerMargin, gRenderer);
-    gRScore->render(SW / 2 + centerMargin, centerMargin, gRenderer);
+	g_lpScore->render(SW / 2 - centerScoreMargin - g_lpScore->getWidth(), centerScoreMargin, g_renderer);
+    g_rpScore->render(SW / 2 + centerScoreMargin, centerScoreMargin, g_renderer);
 
-    pLeftPaddle->render(gRenderer);
-    pRightPaddle->render(gRenderer);
-    pBall->render(gRenderer);
+    lp->render(g_renderer);
+    rp->render(g_renderer);
+    ball->render(g_renderer);
 
-    SDL_RenderPresent(gRenderer);
+    SDL_RenderPresent(g_renderer);
 }
 
 std::vector<SDL_Event>& GetFrameEvents()
@@ -151,7 +151,7 @@ int main(int argc, char* args[])
     }
 
     // Init game objects
-    TheTextureManager::Instance()->load("img/bg.png", "_bg_", gRenderer);
+    TheTextureManager::Instance()->load("img/bg.png", "_bg_", g_renderer);
 
     // Paddles
     Paddle* paddle_1 = new Paddle(
