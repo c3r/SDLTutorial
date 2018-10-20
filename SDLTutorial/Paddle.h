@@ -1,56 +1,50 @@
 #pragma once
-#include "LTexture.h"
-#include "ScreenText.h"
-#include "Ball.h"
 #include <map>
 #include <sstream>
+#include "Ball.h"
+#include "LTexture.h"
+#include "ScreenText.h"
 
 class Paddle {
-public:
-    static const int WIDTH = 20;
-    static const int HEIGHT = 75;
-	static const int VELOCITY = 3;
+ public:
+  static const int WIDTH = 20;
+  static const int HEIGHT = 75;
+  static const int VELOCITY = 3;
 
-    Paddle(std::string textureId,
-        SDL_Point* startPos,
-        uint16_t screenW,
-        uint16_t screenH,
-        SDL_Keycode upKey,
-        SDL_Keycode downKey,
-        SDL_Keycode leftKey,
-        SDL_Keycode rightKey,
-        SDL_Rect* clipRect,
-        short int serveDirection);
+  Paddle(std::string textureId, SDL_Point* startPos, uint16_t screenW,
+         uint16_t screenH, SDL_Keycode upKey, SDL_Keycode downKey,
+         SDL_Keycode leftKey, SDL_Keycode rightKey, SDL_Rect* clipRect,
+         short int serveDirection);
 
-    Paddle();
+  Paddle();
 
-    void handleEvent(SDL_Event& e);
-	SDL_Point * getMiddlePoint();
-    void move();
-    void render(SDL_Renderer* renderer);
-    SDL_Point* getPosition();
-    SDL_Rect* getCollider();
-    std::string getPoints();
-    void addPoint();
-    SDL_Point* getBallServePositionLeft();
-    SDL_Point* getBallServePositionRight();
-    void stick(Ball* ball);
-    bool isBallSticking(Ball *ball);
-    short int getServeDirection();
-	SDL_Point* getVel();
+  void handleEvent(SDL_Event& e);
+  SDL_Point* getMiddlePoint();
+  void move();
+  void render(SDL_Renderer* renderer);
+  SDL_Point* getPosition();
+  SDL_Rect* getCollider();
+  std::string getPoints();
+  void addPoint();
+  SDL_Point* getBallServePositionLeft();
+  SDL_Point* getBallServePositionRight();
+  void stick(Ball* ball);
+  bool isBallSticking(Ball* ball);
+  short int getServeDirection();
+  SDL_Point* getVel();
 
-private:
-    SDL_Keycode m_upKey, m_downKey, m_leftKey, m_rightKey;
-    std::string m_textureId;
-    SDL_Point* m_pos;
-    SDL_Point m_vel;
-    std::map<SDL_Keycode, int> m_keymap;
-    SDL_Rect* m_clip;
-    SDL_Rect m_collider;
-    short int m_points;
-    Ball* m_stickingBall;
-    short int m_serveDirection;
+ private:
+  SDL_Keycode m_upKey, m_downKey, m_leftKey, m_rightKey;
+  std::string m_textureId;
+  SDL_Point* m_pos;
+  SDL_Point m_vel;
+  std::map<SDL_Keycode, int> m_keymap;
+  SDL_Rect* m_clip;
+  SDL_Rect m_collider;
+  short int m_points;
+  Ball* m_stickingBall;
+  short int m_serveDirection;
 
-    // TODO: externalize!
-    int scrW, scrH;
+  // TODO: externalize!
+  int scrW, scrH;
 };

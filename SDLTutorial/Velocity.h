@@ -1,12 +1,10 @@
 #pragma once
-class Velocity
-{
-public:
-	Velocity();
-	~Velocity();
+class Velocity {
+ public:
+  Velocity();
+  ~Velocity();
 
-private:
-	int m_x;
-	int m_y;
+ private:
+  int m_x;
+  int m_y;
 };
-

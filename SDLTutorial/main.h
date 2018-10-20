@@ -1,8 +1,8 @@
-#pragma once 
+#pragma once
 
 #include <vector>
-#include "LTexture.h"
 #include "Ball.h"
+#include "LTexture.h"
 #include "Paddle.h"
 
 const int SW = 640;
@@ -12,8 +12,7 @@ const int SERVE_DIRECTION_RIGHT = 1;
 
 bool init();
 void close();
-std::vector<SDL_Event>&
-GetFrameEvents();
+std::vector<SDL_Event>& GetFrameEvents();
 bool loadTTFMedia();
 
 SDL_Window* gWindow = NULL;
