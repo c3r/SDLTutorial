@@ -36,6 +36,7 @@ public:
     void stick(Ball* ball);
     bool isBallSticking(Ball *ball);
     short int getServeDirection();
+	SDL_Point* getVel();
 
 private:
     SDL_Keycode m_upKey, m_downKey, m_leftKey, m_rightKey;

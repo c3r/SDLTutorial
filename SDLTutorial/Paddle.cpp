@@ -53,7 +53,7 @@ short int Paddle::getServeDirection()
 void Paddle::handleEvent(SDL_Event& e)
 {
 	int v = Paddle::VELOCITY;
-    if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
+    if (e.type == SDL_KEYDOWN && e.key.repeat == 0) { 
         if (e.key.keysym.sym == m_upKey)	{ m_vel.y -= v; return; }
 		if (e.key.keysym.sym == m_downKey)	{ m_vel.y += v; return; }
 		if (e.key.keysym.sym == m_leftKey)	{ m_vel.x -= v; return; }
@@ -113,6 +113,11 @@ SDL_Point* Paddle::getPosition()
     return m_pos;
 }
 
+SDL_Point* Paddle::getVel()
+{
+	return &m_vel;
+}
+
 std::string Paddle::getPoints()
 {
     std::string out_string;
@@ -126,7 +131,7 @@ void Paddle::stick(Ball* ball)
     m_stickingBall = ball;
 }
 
-bool Paddle::isBallSticking(Ball* ball)
+bool Paddle::isBallSticking(Ball* ball) 
 {
     return ball == m_stickingBall;
 }

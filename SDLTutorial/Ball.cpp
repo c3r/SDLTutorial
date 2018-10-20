@@ -54,7 +54,7 @@ void Ball::handleScore(Paddle* lp, Paddle* rp)
 void Ball::unstick(Paddle* p)
 {
     m_vel.x = p->getServeDirection() * Ball::VEL;
-    m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2; // TODO: zrobic to jakos lepiej, lol
+    //m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2; // TODO: zrobic to jakos lepiej, lol
 }
 
 void Ball::move(Paddle* lp, Paddle* rp)
@@ -92,6 +92,7 @@ void Ball::move(Paddle* lp, Paddle* rp)
     // Check for collisions
     if (collision(lp)) {
         m_vel.x = Ball::VEL;
+		m_vel.y = m_vel.y + lp->getVel()->y;
     }
     if (collision(rp)) {
         m_vel.x = -Ball::VEL;
