@@ -21,6 +21,8 @@ public:
 
     void handleEvent(SDL_Event& e);
     void move(Paddle* paddle1, Paddle* paddle2);
+	bool stickToPaddle();
+	void collide(Paddle * cp);
 	void setMiddlePoint(SDL_Point * point);
     bool collision(Paddle* paddle);
     void render(SDL_Renderer* renderer);
@@ -34,6 +36,7 @@ private:
     SDL_Rect* clip;
     SDL_Rect collider;
     std::string textureId;
+	Paddle* stickingPaddle;
 
     // Externalize!
     int screenWidth, screenHeight;

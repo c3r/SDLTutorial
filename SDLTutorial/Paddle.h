@@ -7,8 +7,8 @@
 
 class Paddle {
 public:
-    static const int WIDTH = 10;
-    static const int HEIGHT = 100;
+    static const int WIDTH = 20;
+    static const int HEIGHT = 75;
 	static const int VELOCITY = 3;
 
     Paddle(std::string textureId,

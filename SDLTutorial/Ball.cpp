@@ -1,7 +1,6 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include <cstdlib>
-#include <cmath>
 
 Ball::Ball(std::string textureId,
     SDL_Point* startingPos,
@@ -36,43 +35,19 @@ void Ball::checkForScore(Paddle* lp, Paddle* rp)
 void Ball::handleScore(Paddle* scoring, Paddle* serving)
 {
 	scoring->addPoint();
-	serving->stick(this);
+	stickTo(serving);
 	vel = { 0, 0 };
 }
 
 void Ball::unstick(Paddle* p)
 {
     vel.x = p->getServeDirection() * Ball::VEL;
-    //m_vel.y = SDL_GetTicks() % 2 == 0 ? -2 : 2; // TODO: zrobic to jakos lepiej, lol
+	stickingPaddle = nullptr;
 }
 
 void Ball::move(Paddle* lp, Paddle* rp)
 {
-	Paddle* s = nullptr;
-
-	// TODO: Private member "stickingPaddle"
-	if (lp->isBallSticking(this)) s = lp;
-	if (rp->isBallSticking(this)) s = rp;
-
-    if (s != nullptr) {
-		SDL_Point* pmp = s->getMiddlePoint();
-		int dir = s->getServeDirection();
-
-		pos->x = pmp->x + dir * (Paddle::WIDTH / 2 + Ball::WIDTH / 2) - Ball::WIDTH / 2;
-		pos->y = pmp->y - Ball::WIDTH / 2;
-
-		// The ball is sticking, so no further position calc is needed.
-        return; 
-    }
-
-    // TODO: zrobic zwalnianie tak zeby to mialo sens i bylo SYMETRYCZNE
-    // deaccelerate
-    // if (m_vel.x > 0.08) {
-    //     m_vel = { m_vel.x - 0.105, m_vel.y };
-    // }
-    // if (m_vel.x < -0.08) {
-    //     m_vel = { m_vel.x + 0.11, m_vel.y };
-    // }
+	if (stickToPaddle()) { return; }
 
     // Move
     collider.x = pos->x += vel.x; // Move in x axis
@@ -80,16 +55,10 @@ void Ball::move(Paddle* lp, Paddle* rp)
 
     // Check for score
     checkForScore(lp, rp);
-
+	
     // Check for collisions
-    if (collision(lp)) {
-		vel.x = abs(vel.x) + lp->getVel()->x;
-		vel.y = vel.y + lp->getVel()->y;
-    }
-    if (collision(rp)) {
-		vel.x = -abs(vel.x) + rp->getVel()->x;
-		vel.y =  vel.y + rp->getVel()->y;
-    }
+	if (collision(lp)) { collide(lp); }
+	if (collision(rp)) { collide(rp); }
 
     // Wall collision
     if ((pos->y < 0) || (pos->y + Ball::HEIGHT > screenHeight)) {
@@ -99,10 +68,34 @@ void Ball::move(Paddle* lp, Paddle* rp)
     }
 }
 
+bool Ball::stickToPaddle()
+{
+	if (stickingPaddle == nullptr) return false;
+
+	SDL_Point* pmp = stickingPaddle->getMiddlePoint();
+	int dir = stickingPaddle->getServeDirection();
+
+	pos->x = pmp->x + dir * (Paddle::WIDTH / 2 + Ball::WIDTH / 2) - Ball::WIDTH / 2;
+	pos->y = pmp->y - Ball::WIDTH / 2;
+
+	return true;
+}
+
+void Ball::collide(Paddle* cp)
+{
+	if (cp == nullptr) return;
+
+	// abs
+	if (vel.x < 0)
+		vel.x = -vel.x;
+
+	vel.x = cp->getServeDirection() * abs(vel.x) + cp->getVel()->x;
+	vel.y = vel.y + cp->getVel()->y;
+}
+
 bool Ball::collision(Paddle* paddle)
 {
-    if (paddle == NULL)
-        return false;
+    if (paddle == nullptr) return false;
 
     SDL_Rect* pc = paddle->getCollider();
 
@@ -132,4 +125,10 @@ void Ball::render(SDL_Renderer* pRenderer)
     uint8_t radius = Ball::WIDTH / 2;
     drawCircle(
         pRenderer, new SDL_Point{ pos->x + radius, pos->y + radius }, radius);
+}
+
+void Ball::stickTo(Paddle * paddle)
+{
+	paddle->stick(this);
+	stickingPaddle = paddle;
 }
