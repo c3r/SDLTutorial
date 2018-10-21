@@ -82,7 +82,7 @@ void Ball::collide(Paddle *cp) {
 	if (vel.x < 0) { vel.x *= -1; }
 
 	vel.x = cp->getServeDirection() * abs(vel.x) + cp->getVel()->x / 1.5;
-	vel.y = vel.y - cp->getVel()->y / 2.5;
+	vel.y = vel.y - cp->getVel()->y / 1.25;
 	std::cout << vel.x << ", " << vel.y << std::endl;
 }
 
