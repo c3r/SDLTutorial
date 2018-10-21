@@ -31,13 +31,13 @@ public:
         void stick(Ball* ball);
         bool isBallSticking(Ball* ball);
         short int getServeDirection();
-        SDL_Point* getVel();
+        Velocity* getVel();
 
 private:
         SDL_Keycode m_upKey, m_downKey, m_leftKey, m_rightKey;
         std::string m_textureId;
         SDL_Point* m_pos;
-        SDL_Point m_vel;
+        Velocity m_vel;
         std::map<SDL_Keycode, int> m_keymap;
         SDL_Rect* m_clip;
         SDL_Rect m_collider;

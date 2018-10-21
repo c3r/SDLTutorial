@@ -120,7 +120,7 @@ void Paddle::addPoint() { m_points++; }
 
 SDL_Point* Paddle::getPosition() { return m_pos; }
 
-SDL_Point* Paddle::getVel() { return &m_vel; }
+Velocity* Paddle::getVel() { return &m_vel; }
 
 std::string Paddle::getPoints() {
         std::string out_string;

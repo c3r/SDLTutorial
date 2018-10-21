@@ -69,12 +69,18 @@ bool Ball::stickToPaddle() {
 
 void Ball::collide(Paddle *cp) {
 	if (cp == nullptr) { return; }
+	
+	// If ball and paddle are coming in the same direction, return.
+	// This prevents of multiple collisions when the paddle is coming
+	// the same way that the ball is after collision.
+	if (cp->getServeDirection() * vel.x > 0) { return; }
 
 	// abs
-	if (vel.x < 0) vel.x *= -1;
+	if (vel.x < 0) { vel.x *= -1; }
 
-	vel.x = cp->getServeDirection() * abs(vel.x) + cp->getVel()->x;
-	vel.y = vel.y + cp->getVel()->y;
+	vel.x = cp->getServeDirection() * abs(vel.x) + cp->getVel()->x / 1.5;
+	vel.y = vel.y - cp->getVel()->y / 2.123;
+	std::cout << vel.x << ", " << vel.y << std::endl;
 }
 
 bool Ball::collision(Paddle *paddle) {
