@@ -7,6 +7,12 @@
 
 const int SW = 640;
 const int SH = 480;
+
+const int TABLE_HEIGHT = 380;
+const int TABLE_WIDTH = 630;
+const int TABLE_MARGIN_LEFT = 5;
+const int TABLE_MARGIN_TOP = 70;
+
 const int SERVE_DIRECTION_LEFT = -1;
 const int SERVE_DIRECTION_RIGHT = 1;
 

@@ -143,22 +143,28 @@ int main(int argc, char *args[]) {
         // Init game objects
         TheTextureManager::Instance()->load("img/bg.png", "_bg_", g_renderer);
 
+	SDL_Rect *tableRect = new SDL_Rect{ TABLE_MARGIN_LEFT, 
+		TABLE_MARGIN_TOP, 
+		TABLE_WIDTH, 
+		TABLE_HEIGHT };
+
         // Paddles
         Paddle *paddle_1 = new Paddle(
-                "p1", new SDL_Point{ Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 }, SW, SH,
+                "p1", new SDL_Point{ Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 }, tableRect,
                 SDLK_w, SDLK_s, SDLK_a, SDLK_d,
                 new SDL_Rect{ 0, 0, Paddle::WIDTH, Paddle::HEIGHT }, SERVE_DIRECTION_RIGHT);
 
         Paddle *paddle_2 = new Paddle(
                 "p2", new SDL_Point{ SW - 2 * Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 },
-                SW, SH, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
+                tableRect, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
                 new SDL_Rect{ Paddle::WIDTH, 0, Paddle::WIDTH, Paddle::HEIGHT },
                 SERVE_DIRECTION_LEFT);
 
         // Ball
         Ball *ball = new Ball(
                 new SDL_Point{ SW / 2 - Ball::WIDTH / 2, SH / 2 - Ball::HEIGHT / 2 }, 
-		new SDL_Rect{ 5, 70, 630, 380 });
+		tableRect
+		);
 
         // Frame rate governing
         int32_t ticksPerSecond = 60;

@@ -4,8 +4,8 @@
 #include "Ball.h"
 #include "TextureManager.h"
 
-Paddle::Paddle(std::string textureId, SDL_Point* pStartPos, uint16_t screenW,
-        uint16_t screenH, SDL_Keycode upKey, SDL_Keycode downKey,
+Paddle::Paddle(std::string textureId, SDL_Point* pStartPos, SDL_Rect* tableRect,
+	SDL_Keycode upKey, SDL_Keycode downKey,
         SDL_Keycode leftKey, SDL_Keycode rightKey, SDL_Rect* clipRect,
         short int serveDirection) {
         textureId = textureId;
@@ -20,8 +20,7 @@ Paddle::Paddle(std::string textureId, SDL_Point* pStartPos, uint16_t screenW,
         m_pos = pStartPos;
         m_vel = { 0, 0 };
 
-        scrH = screenH;  // TODO: Externalize!
-        scrW = screenW;
+	m_tableRect = tableRect;
 
         m_keymap = { {downKey, Paddle::VELOCITY}, {upKey, -Paddle::VELOCITY} };
 
@@ -32,8 +31,6 @@ Paddle::Paddle(std::string textureId, SDL_Point* pStartPos, uint16_t screenW,
 Paddle::Paddle() {
         m_pos = new SDL_Point{ 0, 0 };
         m_vel = { 0, 0 };
-        scrH = 0;
-        scrW = 0;
 }
 
 short int Paddle::getServeDirection() { return m_serveDirection; }
@@ -97,20 +94,20 @@ void Paddle::move() {
 
         int bw = Ball::WIDTH;
         int pw = Paddle::WIDTH;
-        int ph = Paddle::HEIGHT;
-        int middle = scrW / 2;
+        int mid = (m_tableRect->x + m_tableRect->w) / 2;
 
         // TODO: Create midblock collider and check for collision here.
-        bool midBlock = m_pos->x < middle - pw - bw || m_pos->x > middle + bw;
+        bool inMiddle = m_pos->x < (mid - pw - bw) || m_pos->x > (mid + bw);
 
-        if ((m_pos->x < 0) || !midBlock || (m_pos->x + pw > scrW)) {
+        if ((m_pos->x < m_tableRect->x) || !inMiddle || (m_pos->x + pw > m_tableRect->x + m_tableRect->w)) {
                 m_pos->x -= m_vel.x;
                 m_collider.x = m_pos->x;
         }
 
+	int ph = Paddle::HEIGHT;
         m_pos->y += m_vel.y;
         m_collider.y = m_pos->y;
-	if ((m_pos->y <= 70) || (m_pos->y + ph > (scrH - 35))) {
+	if ((m_pos->y <= m_tableRect->y) || (m_pos->y + ph > m_tableRect->y + m_tableRect->h)) {
                 m_pos->y -= m_vel.y;
                 m_collider.y = m_pos->y;
         }

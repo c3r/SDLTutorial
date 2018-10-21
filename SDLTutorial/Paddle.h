@@ -11,8 +11,8 @@ public:
         static const int HEIGHT = 80;
         static const int VELOCITY = 3;
 
-        Paddle(std::string textureId, SDL_Point* startPos, uint16_t screenW,
-                uint16_t screenH, SDL_Keycode upKey, SDL_Keycode downKey,
+        Paddle(std::string textureId, SDL_Point* startPos, SDL_Rect* tableRect, 
+		SDL_Keycode upKey, SDL_Keycode downKey,
                 SDL_Keycode leftKey, SDL_Keycode rightKey, SDL_Rect* clipRect,
                 short int serveDirection);
 
@@ -40,11 +40,9 @@ private:
         Velocity m_vel;
         std::map<SDL_Keycode, int> m_keymap;
         SDL_Rect* m_clip;
+	SDL_Rect* m_tableRect;
         SDL_Rect m_collider;
         short int m_points;
         Ball* m_stickingBall;
         short int m_serveDirection;
-
-        // TODO: externalize!
-        int scrW, scrH;
 };
