@@ -6,36 +6,36 @@
 class Paddle;
 
 class Ball {
- public:
-  static const int WIDTH = 20;
-  static const int HEIGHT = 20;
-  static const int VEL = 4;
+public:
+        static const int WIDTH = 20;
+        static const int HEIGHT = 20;
+        static const int VEL = 4;
 
-  Ball(std::string textureId, SDL_Point* startingPos, uint16_t screenW,
-       uint16_t screenH, SDL_Rect* clipRect);
+        Ball(std::string textureId, SDL_Point* startingPos, uint16_t screenW,
+                uint16_t screenH, SDL_Rect* clipRect);
 
-  ~Ball();
+        ~Ball();
 
-  void handleEvent(SDL_Event& e);
-  void move(Paddle* paddle1, Paddle* paddle2);
-  bool stickToPaddle();
-  void collide(Paddle* cp);
-  void setMiddlePoint(SDL_Point* point);
-  bool collision(Paddle* paddle);
-  void render(SDL_Renderer* renderer);
-  void stickTo(Paddle* paddle);
-  void unstick(Paddle* paddle);  // TODO: serve() ?
+        void handleEvent(SDL_Event& e);
+        void move(Paddle* paddle1, Paddle* paddle2);
+        bool stickToPaddle();
+        void collide(Paddle* cp);
+        void setMiddlePoint(SDL_Point* point);
+        bool collision(Paddle* paddle);
+        void render(SDL_Renderer* renderer);
+        void stickTo(Paddle* paddle);
+        void unstick(Paddle* paddle);  // TODO: serve() ?
 
- private:
-  SDL_Point* pos;
-  Velocity vel;
-  SDL_Rect* clip;
-  SDL_Rect collider;
-  std::string textureId;
-  Paddle* stickingPaddle;
+private:
+        SDL_Point* pos;
+        Velocity vel;
+        SDL_Rect* clip;
+        SDL_Rect collider;
+        std::string textureId;
+        Paddle* stickingPaddle;
 
-  // Externalize!
-  int screenWidth, screenHeight;
-  void checkForScore(Paddle* lp, Paddle* rp);
-  void handleScore(Paddle* scoring, Paddle* serving);
+        // Externalize!
+        int screenWidth, screenHeight;
+        void checkForScore(Paddle* lp, Paddle* rp);
+        void handleScore(Paddle* scoring, Paddle* serving);
 };

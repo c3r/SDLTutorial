@@ -1,5 +1,5 @@
 #pragma once
 
 typedef struct Velocity {
-  double x, y;
+        double x, y;
 } Velocity;
