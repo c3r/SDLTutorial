@@ -2,14 +2,10 @@
 #include <cstdlib>
 #include "Paddle.h"
 
-Ball::Ball(std::string textureId, SDL_Point *startingPos, uint16_t screenW,
-	uint16_t screenH, SDL_Rect *clipRect) {
-	textureId = textureId;
+Ball::Ball(SDL_Point *startingPos, SDL_Rect *tableRect) {
 	pos = startingPos;
 	vel = { Ball::VEL, 2 };
-	screenHeight = screenH;
-	screenWidth = screenW;
-	clip = clipRect;
+	this->tableRect = tableRect;
 	collider = { pos->x, pos->y, Ball::WIDTH, Ball::HEIGHT };
 }
 
@@ -17,9 +13,16 @@ Ball::~Ball() {}
 
 void Ball::handleEvent(SDL_Event &e) {}
 
-void Ball::checkForScore(Paddle *lp, Paddle *rp) {
-	if (pos->x + Ball::WIDTH < 0) { handleScore(rp, lp); }
-	if (pos->x - Ball::WIDTH > screenWidth) { handleScore(lp, rp); }
+bool Ball::checkForScore(Paddle *lp, Paddle *rp) {
+	if (pos->x < tableRect->x) {
+		handleScore(rp, lp);
+		return true;
+	}
+	if (pos->x + Ball::WIDTH > (tableRect->x + tableRect->w)) {
+		handleScore(lp, rp);
+		return true;
+	}
+	return false;
 }
 
 void Ball::handleScore(Paddle *scoring, Paddle *serving) {
@@ -41,14 +44,14 @@ void Ball::move(Paddle *lp, Paddle *rp) {
 	collider.y = pos->y += vel.y;  // Move in Y axis
 
 	// Check for score
-	checkForScore(lp, rp);
+	if (checkForScore(lp, rp)) { return; }
 
 	// Check for collisions
-	if (collision(lp)) { collide(lp); }
-	if (collision(rp)) { collide(rp); }
+	if (collision(lp)) { collide(lp); return; }
+	if (collision(rp)) { collide(rp); return; }
 
 	// Wall collision
-	if ((pos->y < 0) || (pos->y + Ball::HEIGHT > screenHeight)) {
+	if ((pos->y <= tableRect->y) || (pos->y + Ball::HEIGHT > tableRect->y + tableRect->h)) {
 		pos->y -= vel.y;
 		vel.y = -vel.y;
 		collider.y = pos->y;
@@ -69,7 +72,7 @@ bool Ball::stickToPaddle() {
 
 void Ball::collide(Paddle *cp) {
 	if (cp == nullptr) { return; }
-	
+
 	// If ball and paddle are coming in the same direction, return.
 	// This prevents of multiple collisions when the paddle is coming
 	// the same way that the ball is after collision.
@@ -79,7 +82,7 @@ void Ball::collide(Paddle *cp) {
 	if (vel.x < 0) { vel.x *= -1; }
 
 	vel.x = cp->getServeDirection() * abs(vel.x) + cp->getVel()->x / 1.5;
-	vel.y = vel.y - cp->getVel()->y / 2.123;
+	vel.y = vel.y - cp->getVel()->y / 2.5;
 	std::cout << vel.x << ", " << vel.y << std::endl;
 }
 
@@ -102,7 +105,7 @@ bool Ball::collision(Paddle *paddle) {
 }
 
 void drawCircle(SDL_Renderer *pRenderer, SDL_Point *center, uint8_t radius) {
-	SDL_SetRenderDrawColor(pRenderer, 0x00, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(pRenderer, 0xEE, 0xE0, 0x93, 0xFF);
 	for (int w = 0; w < radius * 2; w++)
 		for (int h = 0; h < radius * 2; h++) {
 			int dx = radius - w;

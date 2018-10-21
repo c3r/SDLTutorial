@@ -51,7 +51,7 @@ bool init() {
 }
 
 bool loadTTFMedia() {
-        gFont = TTF_OpenFont("img/7segment.ttf", 72);
+        gFont = TTF_OpenFont("img/7segment.ttf", 58);
 
         if (gFont == NULL) {
                 printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
@@ -85,14 +85,15 @@ void render(Paddle *lp, Paddle *rp, Ball *ball) {
         TheTextureManager::Instance()->draw("_bg_", 0, 0);
 
         SDL_Color white = { 255, 255, 255, 255 };
-        int centerScoreMargin = 20;
+        int centerScoreMargin = 45;
 
         g_lpScore->loadFromRenderedText(lp->getPoints(), white, gFont);
         g_rpScore->loadFromRenderedText(rp->getPoints(), white, gFont);
 
-        g_lpScore->render(SW / 2 - centerScoreMargin - g_lpScore->getWidth(),
-                centerScoreMargin, g_renderer);
-        g_rpScore->render(SW / 2 + centerScoreMargin, centerScoreMargin, g_renderer);
+        g_lpScore->render(SW / 2 - centerScoreMargin - g_lpScore->getWidth() + 155, 
+		7, g_renderer);
+
+        g_rpScore->render(SW / 2 + centerScoreMargin + 155, 7, g_renderer);
 
         lp->render(g_renderer);
         rp->render(g_renderer);
@@ -156,9 +157,8 @@ int main(int argc, char *args[]) {
 
         // Ball
         Ball *ball = new Ball(
-                "_sprites_",
-                new SDL_Point{ SW / 2 - Ball::WIDTH / 2, SH / 2 - Ball::HEIGHT / 2 }, SW,
-                SH, new SDL_Rect{ 100, 0, Ball::WIDTH, Ball::HEIGHT });
+                new SDL_Point{ SW / 2 - Ball::WIDTH / 2, SH / 2 - Ball::HEIGHT / 2 }, 
+		new SDL_Rect{ 5, 70, 630, 380 });
 
         // Frame rate governing
         int32_t ticksPerSecond = 60;

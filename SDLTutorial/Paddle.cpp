@@ -110,7 +110,7 @@ void Paddle::move() {
 
         m_pos->y += m_vel.y;
         m_collider.y = m_pos->y;
-        if ((m_pos->y < 0) || (m_pos->y + ph > scrH)) {
+	if ((m_pos->y <= 70) || (m_pos->y + ph > (scrH - 35))) {
                 m_pos->y -= m_vel.y;
                 m_collider.y = m_pos->y;
         }
@@ -134,7 +134,7 @@ void Paddle::stick(Ball* ball) { m_stickingBall = ball; }
 bool Paddle::isBallSticking(Ball* ball) { return ball == m_stickingBall; }
 
 void Paddle::render(SDL_Renderer* pRenderer) {
-        SDL_SetRenderDrawColor(pRenderer, 0xFF, 0xFF, 0xFF, 0xAA);
+        SDL_SetRenderDrawColor(pRenderer, 0x00, 0x00, 0x00, 0xAA);
         SDL_RenderFillRect(pRenderer, &m_collider);
 }
 

@@ -11,8 +11,7 @@ public:
         static const int HEIGHT = 20;
         static const int VEL = 4;
 
-        Ball(std::string textureId, SDL_Point* startingPos, uint16_t screenW,
-                uint16_t screenH, SDL_Rect* clipRect);
+        Ball(SDL_Point* startingPos, SDL_Rect* tableRect);
 
         ~Ball();
 
@@ -29,13 +28,10 @@ public:
 private:
         SDL_Point* pos;
         Velocity vel;
-        SDL_Rect* clip;
         SDL_Rect collider;
-        std::string textureId;
         Paddle* stickingPaddle;
-
-        // Externalize!
-        int screenWidth, screenHeight;
-        void checkForScore(Paddle* lp, Paddle* rp);
+	SDL_Rect* tableRect;
+        
+	bool checkForScore(Paddle* lp, Paddle* rp);
         void handleScore(Paddle* scoring, Paddle* serving);
 };
