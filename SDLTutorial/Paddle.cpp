@@ -131,8 +131,18 @@ void Paddle::stick(Ball* ball) { m_stickingBall = ball; }
 bool Paddle::isBallSticking(Ball* ball) { return ball == m_stickingBall; }
 
 void Paddle::render(SDL_Renderer* pRenderer) {
-        SDL_SetRenderDrawColor(pRenderer, 0xFF, 0xFF, 0xFF, 0xAA);
-        SDL_RenderFillRect(pRenderer, &m_collider);
+        
+	int a = 4;
+	SDL_Rect r1 = { m_collider.x, m_collider.y, m_collider.w - a, m_collider.h };
+	SDL_Rect r2 = { m_collider.x + a, m_collider.y, m_collider.w - 2*a, m_collider.h };
+	SDL_Rect r3 = { m_collider.x + m_collider.w - a, m_collider.y, a, m_collider.h };
+
+	SDL_SetRenderDrawColor(pRenderer, 0xFF, 0x00, 0x00, 0xAA);
+        SDL_RenderFillRect(pRenderer, &r1);
+	SDL_SetRenderDrawColor(pRenderer, 0xCC, 0xA7, 0x53, 0xAA);
+	SDL_RenderFillRect(pRenderer, &r2);
+	SDL_SetRenderDrawColor(pRenderer, 0xFF, 0x00, 0x00, 0xAA);
+	SDL_RenderFillRect(pRenderer, &r3);
 }
 
 SDL_Rect* Paddle::getCollider() { return &m_collider; }
