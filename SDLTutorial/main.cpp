@@ -150,13 +150,18 @@ int main(int argc, char *args[]) {
 
         // Paddles
         Paddle *paddle_1 = new Paddle(
-                "p1", new SDL_Point{ Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 }, tableRect,
+                "p1", 
+                new SDL_Point{ Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 }, 
+                tableRect,
                 SDLK_w, SDLK_s, SDLK_a, SDLK_d,
-                new SDL_Rect{ 0, 0, Paddle::WIDTH, Paddle::HEIGHT }, SERVE_DIRECTION_RIGHT);
+                new SDL_Rect{ 0, 0, Paddle::WIDTH, Paddle::HEIGHT }, 
+                SERVE_DIRECTION_RIGHT);
 
         Paddle *paddle_2 = new Paddle(
-                "p2", new SDL_Point{ SW - 2 * Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 },
-                tableRect, SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
+                "p2", 
+                new SDL_Point{ SW - 2 * Paddle::WIDTH, SH / 2 - Paddle::HEIGHT / 2 },
+                tableRect, 
+                SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
                 new SDL_Rect{ Paddle::WIDTH, 0, Paddle::WIDTH, Paddle::HEIGHT },
                 SERVE_DIRECTION_LEFT);
 

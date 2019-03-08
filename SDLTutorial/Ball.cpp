@@ -6,6 +6,7 @@ Ball::Ball(SDL_Point *startingPos, SDL_Rect *tableRect) {
 	pos = startingPos;
 	vel = { Ball::VEL, 2 };
 	this->tableRect = tableRect;
+	this->stickingPaddle = nullptr;
 	collider = { pos->x, pos->y, Ball::WIDTH, Ball::HEIGHT };
 }
 
@@ -32,12 +33,14 @@ void Ball::handleScore(Paddle *scoring, Paddle *serving) {
 }
 
 void Ball::unstick(Paddle *p) {
+	if (p == nullptr) return;
+
 	vel.x = p->getServeDirection() * Ball::VEL;
 	stickingPaddle = nullptr;
 }
 
 void Ball::move(Paddle *lp, Paddle *rp) {
-	if (stickToPaddle()) { return; }
+ 	if (stickToPaddle()) { return; }
 
 	// Move
 	collider.x = pos->x += vel.x;  // Move in x axis
@@ -59,7 +62,7 @@ void Ball::move(Paddle *lp, Paddle *rp) {
 }
 
 bool Ball::stickToPaddle() {
-	if (stickingPaddle == nullptr) { return false; }
+	if (stickingPaddle == nullptr) return false; 
 
 	SDL_Point *pmp = stickingPaddle->getMiddlePoint();
 	int dir = stickingPaddle->getServeDirection();

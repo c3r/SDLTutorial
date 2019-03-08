@@ -22,7 +22,7 @@ Paddle::Paddle(std::string textureId, SDL_Point* pStartPos, SDL_Rect* tableRect,
 
 	m_tableRect = tableRect;
 
-        m_keymap = { {downKey, Paddle::VELOCITY}, {upKey, -Paddle::VELOCITY} };
+        m_keymap = { {downKey, 5}, {upKey, -5} };
 
         m_clip = clipRect;
         m_collider = { m_pos->x, m_pos->y, Paddle::WIDTH, Paddle::HEIGHT };
@@ -36,7 +36,8 @@ Paddle::Paddle() {
 short int Paddle::getServeDirection() { return m_serveDirection; }
 
 void Paddle::handleEvent(SDL_Event& e) {
-        int v = Paddle::VELOCITY;
+        //int v = Paddle::VELOCITY;
+        int v = 5; 
         if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
                 if (e.key.keysym.sym == m_upKey) {
                         m_vel.y -= v;
@@ -84,8 +85,8 @@ void Paddle::handleEvent(SDL_Event& e) {
 }
 
 SDL_Point* Paddle::getMiddlePoint() {
-        return new SDL_Point{ m_pos->x + Paddle::WIDTH / 2,
-                             m_pos->y + Paddle::HEIGHT / 2 };
+        return new SDL_Point{ m_pos->x + 30 / 2,
+                             m_pos->y + 30 / 2 };
 }
 
 void Paddle::move() {
